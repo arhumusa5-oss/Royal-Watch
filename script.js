@@ -36,20 +36,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const BOOK_ID = 'royal-watch';
+  const BOOK_TITLE = "The Queen's Jewels & Secrets";
+
   // Track events for analytics
   function trackEvent(eventName, eventData = {}) {
     const payload = {
       event: eventName,
+      book_id: BOOK_ID,
+      book_title: BOOK_TITLE,
       timestamp: new Date().toISOString(),
       url: window.location.href,
       referrer: document.referrer || 'direct',
       ...eventData
     };
     console.log('[Analytics]:', payload);
+
+    try {
+      const endpoint = window.ROYAL_TRACKER_ENDPOINT || 'https://royal-tracker-dashboard.vercel.app/api/track';
+      const body = JSON.stringify(payload);
+      if (navigator.sendBeacon) {
+        const blob = new Blob([body], { type: 'application/json' });
+        navigator.sendBeacon(endpoint, blob);
+      } else {
+        fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: body,
+          keepalive: true
+        }).catch(() => {});
+      }
+    } catch (_) {}
   }
 
   // Initial page view event
-  trackEvent('page_view', { book: "The Queen's Jewels & Secrets", channel: "Royal Watch" });
+  trackEvent('page_view', { channel: "Royal Watch" });
 
   // Track checkout button clicks
   document.querySelectorAll('a[href*="whop.com/checkout"]').forEach(btn => {
