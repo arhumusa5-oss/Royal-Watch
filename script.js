@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('[Analytics]:', payload);
 
     try {
-      const endpoint = window.ROYAL_TRACKER_ENDPOINT || 'https://royal-tracker-dashboard.vercel.app/api/track';
+      const endpoint = window.ROYAL_TRACKER_ENDPOINT || 'https://ebook-daily-tracking.vercel.app/api/track';
       const body = JSON.stringify(payload);
       if (navigator.sendBeacon) {
         const blob = new Blob([body], { type: 'application/json' });
