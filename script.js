@@ -54,18 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const endpoint = window.ROYAL_TRACKER_ENDPOINT || 'https://ebook-daily-tracking.vercel.app/api/track';
-      const body = JSON.stringify(payload);
-      if (navigator.sendBeacon) {
-        const blob = new Blob([body], { type: 'application/json' });
-        navigator.sendBeacon(endpoint, blob);
-      } else {
-        fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: body,
-          keepalive: true
-        }).catch(() => {});
-      }
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        mode: 'cors',
+        keepalive: true
+      }).catch(err => console.warn('Track failed:', err));
     } catch (_) {}
   }
 
